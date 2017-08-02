@@ -1,0 +1,20 @@
+{% extends 'cmmi/base.html' %}
+{% block content %}
+
+<form action="/task/?project_id={{project.id}}" method="post">{% csrf_token %}
+    {{ form }}
+    <button class="btn waves-effect waves-light" type="submit" value="Submit" name="action">
+      <i class="small material-icons right">check</i>Crear
+    </button>
+</form>
+
+<div class="fixed-action-btn horizontal">
+ <a class="btn-floating btn-large waves-effect waves-light red" onclick="goBack()"><i class="material-icons">chevron_left</i></a>
+
+ <script>
+function goBack() {
+window.history.back();
+}
+</script>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'cmmi/base.html' %}
+{% block content %}
+
+
+<div class="collection">
+  {% for p in projects %}
+        <div><a href="/projectDetails?project_id={{p.id}}" class="collection-item">{{p.nombre_proyecto}}</a>
+        <a href="/modifyProject/?project_id={{p.id}}">Modificar {{p.nombre_proyecto}}</a>
+        <div>
+   {% endfor %}
+</div>
+<div class="fixed-action-btn horizontal">
+ <a class="btn-floating btn-large waves-effect waves-light red" href="/modifyProject/?project_id=project.id"><i class="material-icons">add</i></a>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'cmmi/base.html' %}
+{% block content %}
+<div class="divider"></div>
+  <div class="section">
+    <h5>Nombre del Proyecto</h5>
+    <p>{{project.nombre_proyecto}}</p>
+  </div>
+  <div class="divider"></div>
+  <div class="section">
+    <h5>Descripcion</h5>
+    <p>{{project.descripcion}}</p>
+  </div>
+  <div class="divider"></div>
+  <div class="section">
+    <h5>Fecha de Inicio</h5>
+    <p>{{project.fecha_inicio}}</p>
+  </div>
+  <div class="divider"></div>
+  <div class="section">
+    <h5>Fecha de finalizacion estimada</h5>
+    <p>{{project.fecha_final_estimada}}</p>
+  </div>
+  <div class="divider"></div>
+  <div class="section">
+    <h5>Porcentaje completado</h5>
+    <p>{{project.porcentaje_completado}}%</p>
+  </div>
+
+  <table class="highlight">
+          <thead>
+            <tr>
+                <th>Tareas asignadas</th>
+                <th>Porcentaje completado</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for t in tasks %}
+            <tr>
+              <td><a href="/taskDetails?task_id={{t.id}}" class="collection-item">{{t.nombre_tarea}}</a></td>
+              <td>{{t.porcentaje_completado}}%</td>
+              <td><a href="/modifyTask?task_id={{t.id}}"><i class="material-icons">create</i></a>
+            </tr>
+             {% endfor %}
+          </tbody>
+        </table>
+<div class="fixed-action-btn horizontal">
+             <a class="btn-floating btn-large waves-effect waves-light red" href="/task/?project_id={{project.id}}"><i class="material-icons">add</i></a>
+                </div>
+        </div>
+{% endblock %}
