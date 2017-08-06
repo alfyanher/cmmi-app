@@ -1,112 +1,63 @@
-from django.http import HttpResponse
-from .models import *
-from .forms import *
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.edit import UpdateView
-from django.template import RequestContext
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.shortcuts import render_to_response, get_object_or_404
+from django.views import generic
+from .models import Proyecto, Tarea
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.views.generic import View
+from .forms import UserForm
 
-import json
+class VistaPrincipal(generic.ListView):
+    template_name = 'cmmi/index.html'
+    context_object_name = 'lista_proyecto'
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the cmmi index.")
+    def get_queryset(self):
+        return Proyecto.objects.all()
 
-def createProject(request):
-	if request.POST:
-		form = ProjectForm(request.POST)
-		if form.is_valid():
-			project = form.save()
-			project.save()
-		else:
-			print(form.errors)
-	else:
-		form = ProjectForm()
-	return render(request, 'cmmi/project.html', locals())
-#
-# def modifyProject(request):
-#     project = Proyecto.objects.get(id=request.GET.get('project_id',False))
-#     form = ProjectForm(request.POST or None, instance = project)
-#     if request.POST:
-#         if form.is_valid():
-#             form.save()
-#         else:
-#             print(form.errors)
-#     return render(request, 'cmmi/project.html', locals())
+class VistaDetalles(generic.DetailView):
+    model = Proyecto
+    template_name = 'cmmi/detalles.html'
 
-def modifyProject(request):
-    project = Proyecto.objects.get(id=request.GET.get('project_id',False))
-    if request.POST:
-        form = ProjectForm(request.POST)
-        print(TODO)
-    return render(request, 'cmmi/modifyProject.html',{'project' : project_id})
+class CreaProyecto(CreateView):
+    model = Proyecto
+    fields = ['nombre_proyecto', 'descripcion', 'fecha_inicio', 'manager']
 
-@csrf_exempt
-def createTask(request):
-    #print(request.GET.get('project_id'))
-    print(request.method)
-    project = Proyecto.objects.get(id=request.GET.get('project_id',False))
-    print(project.id)
+class ModificaProyecto(UpdateView):
+    model = Proyecto
+    fields = ['nombre_proyecto', 'descripcion', 'fecha_inicio', 'manager']
 
-    if request.POST:
-        print("ESTOY DENTROOOOO")
-        form = TaskForm(request.POST)
-        print("ESTOY DENTROOOOO 2")
+class EliminaProyecto(DeleteView):
+    model = Proyecto
+    success_url = reverse_lazy('cmmi:index')
+
+class VistaUsuarioForm(View):
+    form_class = UserForm
+    template_name = 'cmmi/registro.html'
+
+    # Formulario en blanco
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request, self.template_name, {'form': form})
+
+    #Procesa la info
+    def post(self, request):
+        form = self.form_class(request.POST)
+
         if form.is_valid():
-            task = form.save()
-            task.save()
-            print("ESTOY DENTROOOOO 3")
-        else:
-            print(form.errors)
-    else:
-        form = TaskForm()
-        print(TaskForm)
-    return render(request, 'cmmi/task.html',{'project' : project})
+            usuario = form.save(commit=False)
 
-#
-#     print(request.GET.get('project_id',False))
-#     project = Proyecto.objects.get(id=request.GET.get('project_id',False))
-#     # tasks = Tarea.objects.filter(proyecto_id=project.id)
-#     # if request.POST:
-#     #     form = TaskForm(request.POST)
-#     #     form.proyecto_id = int(request.GET.get('project_id'))
-#     #     form.proyecto = project
-#     #     if form.is_valid():
-#     #         task = form.save()
-#     #         return HttpResponseRedirect('/projectDetails')
-#     #     else:
-#     #         print(form.errors)
-#     # else:
-#     #     form = TaskForm()
-#     return render(request, 'cmmi/task.html', locals())
-# #
-# def modifyTask(request):
-#     task = Tarea.objects.get(id=request.GET.get('task_id',False))
-#     form = TaskForm(request.POST or None, instance = task)
-#     if request.POST:
-#         if form.is_valid():
-#             form.save()
-#         else:
-#             print(form.errors)
-#     return render(request, 'cmmi/modifyTask.html', locals())
+            #datos formateados
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            usuario.set_password(password)
+            usuario.save()
 
+            #devuelve al Usuario si los credenciales son correctos
+            usario = authenticate(username=username,password=password)
 
-def listAllProjects(request):
-    projects = Proyecto.objects.all()
-    return render(request, 'cmmi/listAllProjects.html', locals())
-
-# def listTasksPerProject(request):
-#     tasks = Tarea.objects.filter(id=request.GET['project'])
-#     return render(request, 'cmmi/listTasksPerProject.html', locals())
-
-def projectDetails(request):
-    print(request.GET.get('project_id'))
-    print('Ha pasado!!!!')
-    project = Proyecto.objects.get(id=request.GET.get('project_id',False))
-    tasks = Tarea.objects.filter(proyecto_id=project.id)
-    return render(request, 'cmmi/projectDetails.html', locals())
-
-def taskDetails(request):
-    task = Tarea.objects.get(id=request.GET['task_id'])
-    return render(request, 'cmmi/taskDetails.html', locals())
+            if usuario is not None:
+                if usuario.is_active:
+                    login(request, usuario)
+                    return redirect('cmmi:index')
+                    
+        return render(request, self.template_name, {'form': form})

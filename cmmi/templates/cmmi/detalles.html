@@ -1,0 +1,69 @@
+{% extends 'cmmi/base.html' %}
+{% block title %}Detalles del Proyecto{% endblock %}
+{% block proyectos_active %}active{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid tareas.container">
+    <div class="row">
+
+        <!-- Info tarea izqda -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
+                    <h1>{{ proyecto.nombre_proyecto }}</h1>
+                        <small>{{ proyecto.fecha_inicio}}</small>
+                    </h1>
+                    <h2>{{ proyecto.manager }}</h2>
+                    <h4>{{ proyecto.descripcion }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info tarea dcha -->
+        <div class="col-dm-8 col-md-9">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li class="active"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver Todas</a>
+                <li><a href="#">Añadir una Nueva Tarea</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Tareas</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Urgente</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                    {% for tarea in proyecto.tarea_set.all %}
+                        <tr>
+                            <td>{{ tarea.nombre_tarea }}</td>
+                            <td>{{ tarea.descripcion}}</td>
+                            <td>
+                                <a href="#" class="btn-favorite"><span class="glyphicon glyphicon-exclamation-sign {% if tatea.es_urgente %}active{% endif %}"></span></a>
+                            </td>
+                            <td>
+                                <form action="#" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tarea_id" value="{{ tarea.id }}" />
+                                    <button type="submit" class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-remove"></span>&nbsp; Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

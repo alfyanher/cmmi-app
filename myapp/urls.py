@@ -16,18 +16,9 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from cmmi import views
-
-
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^cmmi/', include('cmmi.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^project/', views.createProject, name='createProject'),
-    url(r'^task/', views.createTask, name='createTask'),
-    url(r'^modifyProject/', views.modifyProject, name='modifyProject'),
-    # url(r'^modifyTask/', views.modifyTask, name='modifyTask'),
-    url(r'^listAllProjects/', views.listAllProjects, name='listAllProjects'),
-    #url(r'^listTasksPerProject/', views.listTasksPerProject, name='listTasksPerProject'),
-    url(r'^projectDetails/', views.projectDetails, name='projectDetails'),
-    url(r'^taskDetails/', views.taskDetails, name='taskDetails'),
-    ]
+]

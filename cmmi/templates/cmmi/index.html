@@ -1,0 +1,32 @@
+{% extends 'cmmi/base.html' %}
+{% block proyectos_active %}active{% endblock %}
+
+{% block body %}
+<div class="proyectos-container container-fluid">
+    <div class="row">
+        {% for proyecto in lista_proyecto %}
+            <div class="caption">
+                <h2>{{ proyecto.nombre_proyecto }}</h2>
+                <h4>{{ proyecto.manager }}</h4>
+
+                <!-- Detalles -->
+                <a href="{% url 'cmmi:detalles' proyecto.id %}" class="btn btn-primary btn-sm"> Ver Detalles</a>
+
+                <!-- Eliminar -->
+                <form action="{% url 'cmmi:proyecto-eliminar' proyecto.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}"/>
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </form>
+
+                <!-- Urgente -->
+                <a href="#" class="btn btn-default btn-sm btn-favourite">
+                    <span class="glyphicon glyphicon-exclamation-sign {% if proyecto.es_urgente %}active{% endif %}">
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
