@@ -1,0 +1,51 @@
+{% extends 'cmmi/base.html' %}
+{% block title %}Tareas{% endblock %}
+{% block tareas_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid tareas-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" {% if filter_by == 'all' %}class="active"{% endif %}><a href="{% url 'cmmi:tareas' 'all' %}">Ver todas</a></li>
+                <li role="presentation" {% if filter_by == 'urgentes' %}class="active"{% endif %}><a href="{% url 'cmmi:tareas' 'urgentes' %}">Urgentes</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre de la tarea</th>
+                                <th>Manager</th>
+                                <th>Descripción</th>
+                                <th>Proyecto</th>
+                                <th>Urgente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarea in tareas %}
+                                <tr>
+                                    <td>{{ tarea.nombre_tarea }}</td>
+                                    <td>{{ tarea.proyecto.manager }}</td>
+                                    <td>{{ tarea.descripcion }}</td>
+                                    <td>
+                                        <a href="{% url 'cmmi:detalles' tarea.proyecto.id %}">{{ tarea.proyecto.nombre_proyecto }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'cmmi:urgente' tarea.id %}" class="btn-urgente"><span class="glyphicon glyphicon-exclamation-sign {% if tarea.es_urgente %}active{% endif %}"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

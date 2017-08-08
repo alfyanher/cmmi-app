@@ -1,0 +1,43 @@
+{% extends 'cmmi/base.html' %}
+{% block title %}Añadir un nuevo Proyecto{% endblock %}
+{% block proyectos_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Añadir un nuevo Proyecto</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% include 'cmmi/form-template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>CMMI</h3>
+                    <p>Con esta app se simplifica la gestión de proyectos y tareas de cualquier sector..</p>
+                    <h3>¿Cómo añadir nueva información?</h3>
+                    <p>En primer lugar, cree un nuevo proyecto y rellene la información necesaria. Una vez creado el proyecto, tendrá la posibilidad de añadir tareas.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

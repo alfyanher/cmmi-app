@@ -1,10 +1,10 @@
 {% extends 'cmmi/base.html' %}
-{% block title %}Detalles del Proyecto{% endblock %}
+{% block title %}Detalles del proyecto{% endblock %}
 {% block proyectos_active %}active{% endblock %}
 
 {% block body %}
 
-<div class="container-fluid tareas.container">
+<div class="container-fluid tareas-container">
     <div class="row">
 
         <!-- Info tarea izqda -->
@@ -12,9 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
-                    <h1>{{ proyecto.nombre_proyecto }}</h1>
-                        <small>{{ proyecto.fecha_inicio}}</small>
-                    </h1>
+                    <h1>{{ proyecto.nombre_proyecto }} <small>{{ proyecto.fecha_inicio}}</small> </h1>
                     <h2>{{ proyecto.manager }}</h2>
                     <h4>{{ proyecto.descripcion }}</h4>
                 </div>
@@ -24,32 +22,35 @@
         <!-- Info tarea dcha -->
         <div class="col-dm-8 col-md-9">
             <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li class="active"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver Todas</a>
-                <li><a href="#">Añadir una Nueva Tarea</a></li>
+                <li role="presentation" class="active"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas</a>
+                <li role="presentation"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir una nueva Tarea</a></li>
             </ul>
 
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h3>Tareas</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Urgente</th>
-                                <th>Opciones</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                     <tbody>
                     {% for tarea in proyecto.tarea_set.all %}
                         <tr>
                             <td>{{ tarea.nombre_tarea }}</td>
-                            <td>{{ tarea.descripcion}}</td>
+                            <td>{{ tarea.descripcion }}</td>
                             <td>
-                                <a href="#" class="btn-favorite"><span class="glyphicon glyphicon-exclamation-sign {% if tatea.es_urgente %}active{% endif %}"></span></a>
+                                <a href="{% url 'cmmi:urgente' tarea.id %}" class="btn-urgente"><span class="glyphicon glyphicon-exclamation-sign {% if tarea.es_urgente %}active{% endif %}"></span></a>
                             </td>
                             <td>
-                                <form action="#" method="post" style="display: inline;">
+                                <form action="{% url 'cmmi:tarea_eliminar' proyecto.id tarea.id %}" method="post" style="display: inline;">
                                     {% csrf_token %}
                                     <input type="hidden" name="tarea_id" value="{{ tarea.id }}" />
                                     <button type="submit" class="btn btn-danger btn-xs">

@@ -1,5 +1,5 @@
 body{
-    background-color:  azure;
+    background-color: #ededed;
 }
 
 .navbar{
@@ -16,4 +16,13 @@ ul.errorlist {
 
 ul.errorlist > li {
     list-style: none;
+}
+
+.glyphicon-exclamation-sign {
+    color: #CCCCCC;
+    font-size: 16px;
+}
+
+.glyphicon-exclamation-sign.active {
+    color: #000000;
 }

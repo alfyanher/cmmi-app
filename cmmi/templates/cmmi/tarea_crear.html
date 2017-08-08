@@ -1,0 +1,51 @@
+{% extends 'cmmi/base.html' %}
+{% block title %}Añadir una nueva Tarea{% endblock %}
+{% block proyectos_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!-- Info izqda -->
+        <div class="col-sm-4 col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                        <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
+                    <h1>{{ proyecto.nombre_proyecto }} <small>{{ proyecto.fecha_inicio }}</small></h1>
+                    <h2>{{ proyecto.manager }}</h2>
+                    <h4>{{ proyecto.descripcion }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info dcha -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas</a></li>
+                <li role="presentation" class="active"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir nueva Tarea</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Añadir una nueva Tarea</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="proyecto" value="{{ proyecto }}">
+                        {% include 'cmmi/form-template.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
