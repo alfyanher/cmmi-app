@@ -4,31 +4,37 @@
 
 {% block body %}
 
+<ol class="breadcrumb">
+  <li><a href="{% url 'cmmi:index' %}">Proyectos</a></li>
+  <li><b>{{proyecto.nombre_proyecto}}</b></li>
+</ol>
+<div class="row container">
+    <ul class="nav nav-pills" style="margin-bottom: 10px;">
+        <li role="presentation" class="active"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas las tareas</a>
+        <li role="presentation"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir nueva tarea</a></li>
+    </ul>
+</div>
+
+    <div class="container-fluid" style="margin-bottom:10px">
+     <h4>{{proyecto.descripcion}}</h4> <br/>
+     <small>
+        <b>Fecha de inicio </b> {{ proyecto.fecha_inicio}}<br/>
+        <b> Dirigido por </b> {{ proyecto.manager }}<br/>
+        <b> Nivel de madurez actual</b> {{proyecto.nivelMadurez}}
+    </small>
+    </div>
+
+
 <div class="container-fluid tareas-container">
     <div class="row">
-
-        <!-- Info tarea izqda -->
-        <div class="col-sm-4 col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
-                    <h1>{{ proyecto.nombre_proyecto }} <small>{{ proyecto.fecha_inicio}}</small> </h1>
-                    <h2>{{ proyecto.manager }}</h2>
-                    <h4>{{ proyecto.descripcion }}</h4>
-                </div>
-            </div>
-        </div>
-
         <!-- Info tarea dcha -->
         <div class="col-dm-8 col-md-9">
-            <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation" class="active"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas</a>
-                <li role="presentation"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir una nueva Tarea</a></li>
-            </ul>
-
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>Tareas</b>
+                </div>
+
                 <div class="panel-body">
-                    <h3>Tareas</h3>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -37,6 +43,8 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Completada</th>
                                 <th>Urgente</th>
                                 <th>Acciones</th>
                             </tr>
@@ -46,6 +54,12 @@
                         <tr>
                             <td>{{ tarea.nombre_tarea }}</td>
                             <td>{{ tarea.descripcion }}</td>
+                            <td>{{ tarea.categoriaAP }}</td>
+                            <td>
+                                <a href="{% url 'cmmi:completada' tarea.id %}" class="btn-completada">
+                                    <span  class="glyphicon glyphicon-ok" {% if tarea.completada %}style= "color: #06e87f; font-size: 16px;" {% else %} style= "color: #cccccc; font-size: 16px;" {% endif %}></span></a>
+                            </td>
+
                             <td>
                                 <a href="{% url 'cmmi:urgente' tarea.id %}" class="btn-urgente"><span class="glyphicon glyphicon-exclamation-sign {% if tarea.es_urgente %}active{% endif %}"></span></a>
                             </td>

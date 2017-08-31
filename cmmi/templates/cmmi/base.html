@@ -47,7 +47,7 @@
             </ul>
 
             <!--Búsqueda-->
-            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'cmmi:index' %}">
+            <form class="navbar-form navbar-left" role="search" method="get" action="{% url 'cmmi:search' %}">
                 <div class="form-group">
                     <input type="text" class="form-control" name="q" value="{{ request.GET.q }}">
                 </div>
@@ -73,7 +73,9 @@
     </div>
 </div>
 </nav>
+<div class="container-fluid ">
 {% block body %}
 {% endblock %}
+</div>
 </body>
 </html>

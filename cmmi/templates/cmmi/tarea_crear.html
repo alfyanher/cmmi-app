@@ -3,33 +3,36 @@
 {% block proyectos_active %}active{% endblock %}
 
 {% block body %}
+
+<ol class="breadcrumb">
+  <li><a href="{% url 'cmmi:index' %}">Proyectos</a></li>
+  <li><b>{{proyecto.nombre_proyecto}}</b></li>
+</ol>
+<!-- <div class="container-fluid" style="margin-bottom:10px">
+<small> {{proyecto.descripcion}} <br/>
+    <b>Fecha de inicio </b> {{ proyecto.fecha_inicio}}<br/>
+    <b> Dirigido por </b> {{ proyecto.manager }}<br/>
+    <b> Nivel de madurez actual</b> {{proyecto.nivelMadurez}}
+</small>
+</div> -->
+
 <div class="container-fluid">
+
+    <div class="row container">
+        <ul class="nav nav-pills" style="margin-bottom: 10px;">
+            <li role="presentation"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas las tareas</a></li>
+            <li role="presentation" class="active"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir nueva tarea</a></li>
+        </ul>
+    </div>
 
     <div class="row">
 
-        <!-- Info izqda -->
-        <div class="col-sm-4 col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                        <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
-                    <h1>{{ proyecto.nombre_proyecto }} <small>{{ proyecto.fecha_inicio }}</small></h1>
-                    <h2>{{ proyecto.manager }}</h2>
-                    <h4>{{ proyecto.descripcion }}</h4>
-                </div>
-            </div>
-        </div>
-
         <!-- Info dcha -->
-        <div class="col-sm-8 col-md-9">
-
-            <ul class="nav nav-pills" style="margin-bottom: 10px;">
-                <li role="presentation"><a href="{% url 'cmmi:detalles' proyecto.id %}">Ver todas</a></li>
-                <li role="presentation" class="active"><a href="{% url 'cmmi:tarea_crear' proyecto.id %}">Añadir nueva Tarea</a></li>
-            </ul>
+        <div class="col-sm-4 col-md-4">
 
             <div class="panel panel-default">
+                <div class="panel-heading"><b> Añadir nueva tarea </b> </div>
                 <div class="panel-body">
-                    <h3>Añadir una nueva Tarea</h3>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -37,12 +40,64 @@
                         {% csrf_token %}
                         <input type="hidden" name="proyecto" value="{{ proyecto }}">
                         {% include 'cmmi/form-template.html' %}
-                        <div class="form-group">
+                        <div class="form-group text-center">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-success">Enviar</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Crear tarea</button>
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4 col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading"> Intrucciones </div>
+                <div class="panel-body">
+                    <h3>Categorías de áreas de proceso</h3>
+                    <p>Recuerde, que las categorías de áreas de proceso en CMMI, se dividen en <b>22</b> áreas de proceso.</p>
+                    <h3>Criterio de selección</h3>
+                    <p>Debe basar su elección de la <b>categoría</b> de esta tarea, teniendo en cuenta su clasificacion.</p>
+                    <ul class="list-group">
+                      <li class="list-group-item">
+                        <h4 class="list-group-item-heading">Gestión de Proyectos</h4>
+                        <p class="list-group-item-text">•	Planificación de Proyecto</p>
+                        <p class="list-group-item-text">•	Monitorización y Control de Proyecto</p>
+                        <p class="list-group-item-text">•	Gestión de Contratos de Proveedores</p>
+                        <p class="list-group-item-text">•	Gestión de Proyectos Integrados</p>
+                        <p class="list-group-item-text">•	Gestión de Riesgos</p>
+                        <p class="list-group-item-text">•	Gestión Cuantitativa de Proyectos</p>
+                        <p class="list-group-item-text">•	Integración de Equipos</p>
+                    </li>
+                      <li  class="list-group-item ">
+                        <h4 class="list-group-item-heading">Gestión de Procesos</h4>
+                        <p class="list-group-item-text">•	Enfoque del Proceso Organizacional</p>
+                        <p class="list-group-item-text">•	Definición del Proceso Organizacional</p>
+                        <p class="list-group-item-text">•	Formación Organizacional</p>
+                        <p class="list-group-item-text">•	Desempeño del Proceso Organizacional</p>
+                        <p class="list-group-item-text">•	Innovación e Implementación Organizacional</p>
+                    </li>
+                      <li  class="list-group-item ">
+                        <h4 class="list-group-item-heading">Ingeniería</h4>
+                        <p class="list-group-item-text">•	Gestión de Requisitos</p>
+                        <p class="list-group-item-text">•	Desarrollo de Requisitos</p>
+                        <p class="list-group-item-text">•	Solución Técnica</p>
+                        <p class="list-group-item-text">•	Integración de Productos</p>
+                        <p class="list-group-item-text">•	Verificación</p>
+                        <p class="list-group-item-text">•	Validación</p>
+                    </li>
+                      <li class="list-group-item ">
+                        <h4 class="list-group-item-heading">Soporte</h4>
+                        <p class="list-group-item-text">•	Gestión de Configuración</p>
+                        <p class="list-group-item-text">•	Aseguramiento de Calidad de Procesos y Productos</p>
+                        <p class="list-group-item-text">•	Medición y Análisis</p>
+                        <p class="list-group-item-text">•	Análisis y Resolución de Decisiones</p>
+                        <p class="list-group-item-text">•	Análisis y Resolución Causal</p>
+                        <p class="list-group-item-text">•	Entorno Organizacional para la Integración</p>
+                    </li>
+</ul>
+
+
                 </div>
             </div>
         </div>

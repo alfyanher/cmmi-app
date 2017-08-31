@@ -1,0 +1,19 @@
+{% extends 'cmmi/base.html' %}
+{% block title %}Modificar Proyecto{% endblock %}
+{% block proyectos_active %}active{% endblock %}
+
+{% block body %}
+<ol class="breadcrumb">
+  <li><a href="#">Poryectos</a></li>
+  <li><a href="#">{{proyecto.nombre_proyecto}}</a></li>
+</ol>
+<div class = "container">
+    <form method="post">
+        {% csrf_token % }
+        {{ form.as_p}}
+        <button type="submit">Enviar</button>
+    </form>
+    <br>
+</div>
+
+{% endblock %}

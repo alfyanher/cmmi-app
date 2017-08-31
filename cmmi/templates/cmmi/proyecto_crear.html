@@ -7,10 +7,10 @@
 
     <div class="row">
 
-        <div class="col-sm-12 col-md-7">
+        <div class="col-sm-12 col-md-5">
             <div class="panel panel-default">
+                <div class="panel-heading"><b> Crear proyecto </b></div>
                 <div class="panel-body">
-                    <h3>Añadir un nuevo Proyecto</h3>
                     {% if error_message %}
                         <p><strong>{{ error_message }}</strong></p>
                     {% endif %}
@@ -18,8 +18,8 @@
                         {% csrf_token %}
                         {% include 'cmmi/form-template.html' %}
                         <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-success">Enviar</button>
+                            <div class="col-sm-offset-2 col-sm-10 text-center">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
                             </div>
                         </div>
                     </form>
@@ -27,13 +27,37 @@
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-5">
-            <div class="panel panel-default">
+        <div class="col-sm-4 col-md-7">
+            <div class="panel panel-primary">
+                <div class="panel-heading"> Intrucciones </div>
                 <div class="panel-body">
-                    <h3>CMMI</h3>
-                    <p>Con esta app se simplifica la gestión de proyectos y tareas de cualquier sector..</p>
-                    <h3>¿Cómo añadir nueva información?</h3>
-                    <p>En primer lugar, cree un nuevo proyecto y rellene la información necesaria. Una vez creado el proyecto, tendrá la posibilidad de añadir tareas.</p>
+                    <h3>Niveles de madurez</h3>
+                    <p>Recuerde, que los niveles de madurez en CMMI, se dividen en <b>5</b> tipos.</p>
+                    <h3>Criterio de selección</h3>
+                    <p>Debe basar su elección del <b>nivel de madurez</b> de este proyecto, teniendo en cuenta la situación en la que se encuentra su proyecto.</p>
+                    <ul class="list-group">
+                      <li class="list-group-item">
+                        <h4 class="list-group-item-heading">Nivel 1: Ejecutado</h4>
+                        <p class="list-group-item-text">Carece de los procesos necesarios para mantener los niveles de servicio.</p>
+                    </li>
+                      <li  class="list-group-item ">
+                        <h4 class="list-group-item-heading">Nivel 2: Gestionado</h4>
+                        <p class="list-group-item-text">El proyecto se gestiona y reacciona, pero no predice estratégicamente los costos de los servicios y competidores.</p>
+                    </li>
+                      <li  class="list-group-item ">
+                        <h4 class="list-group-item-heading">Nivel 3: Definido</h4>
+                        <p class="list-group-item-text">Se pueden anticipar los cambios en el entorno y  los planes, pero aún se carece de la capacidad de pronosticar cambios en los costes, y horarios de los servicios.</p>
+                    </li>
+                      <li class="list-group-item ">
+                        <h4 class="list-group-item-heading">Nivel 4: Gestionado Cuantitativamente</h4>
+                        <p class="list-group-item-text">Se pronostica y gestiona estadísticamente el rendimiento en función del coste seleccionado, el horario y los niveles de satisfacción del cliente.</p>
+                    </li>
+                    <li class="list-group-item ">
+                      <h4 class="list-group-item-heading">Nivel 5: Optimizado</h4>
+                      <p class="list-group-item-text">Es posible reducir los costos operacionales mejorando el rendimiento actual del proceso o introduciendo servicios innovadores para mantener la ventaja competitiva.</p>
+                  </li>
+</ul>
+
 
                 </div>
             </div>

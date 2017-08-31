@@ -23,6 +23,8 @@
                                 <th>Nombre de la tarea</th>
                                 <th>Manager</th>
                                 <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Completada</th>
                                 <th>Proyecto</th>
                                 <th>Urgente</th>
                             </tr>
@@ -33,6 +35,11 @@
                                     <td>{{ tarea.nombre_tarea }}</td>
                                     <td>{{ tarea.proyecto.manager }}</td>
                                     <td>{{ tarea.descripcion }}</td>
+                                    <td>{{ tarea.categoriaAP }}</td>
+                                    <td>
+                                        <a href="{% url 'cmmi:completadasAll' tarea.id %}" class="btn-completada">
+                                            <span  class="glyphicon glyphicon-ok" {% if tarea.completada %}style= "color: #06e87f; font-size: 16px;" {% else %} style= "color: #cccccc; font-size: 16px;" {% endif %}></span></a>
+                                    </td>
                                     <td>
                                         <a href="{% url 'cmmi:detalles' tarea.proyecto.id %}">{{ tarea.proyecto.nombre_proyecto }}</a>
                                     </td>

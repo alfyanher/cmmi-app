@@ -14,10 +14,10 @@ class ProyectoForm(forms.ModelForm):
 
     class Meta:
         model = Proyecto
-        fields = ['nombre_proyecto', 'descripcion', 'fecha_inicio', 'manager']
+        fields = ['nombre_proyecto', 'descripcion', 'fecha_inicio', 'manager', 'nivelMadurez']
 
 class TareaForm(forms.ModelForm):
 
     class Meta:
         model = Tarea
-        fields = ['nombre_tarea', 'descripcion']
+        fields = ['nombre_tarea', 'descripcion', 'categoriaAP']

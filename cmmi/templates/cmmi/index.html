@@ -3,37 +3,59 @@
 
 
 {% block body %}
-<div class="proyectos-container container-fluid">
+<div class="proyectos-container container-fluid col-md-offset-1">
     <div class="row">
         <div class="row">
-            <div class="col-md-12">
-                <h3>Proyectos de {{ user.username }}</h3>
+            <div class=" col-md-12">
+                <h3>Mis proyectos</h3>
             </div>
             {% if proyectos %}
-            {% for proyecto in proyectos %}
-            <div class="col-sm-4 col-lg-3">
-                <div class="thumbnail">
-                    <a href="{% url 'cmmi:detalles' proyecto.id %}"></a>
-                    <div class="caption">
-                        <h2>{{ proyecto.nombre_proyecto }}</h2>
-                        <h4>{{ proyecto.manager }}</h4>
+            {% for proyecto, perc_compl in proyectos_and_perc %}
 
-                        <!-- Detalles -->
-                        <a href="{% url 'cmmi:detalles' proyecto.id %}" class="btn btn-primary btn-sm"> Ver detalles</a>
+            <div class=" col-sm-8 col-lg-11">
+                <div class="panel panel-default">
+                    <div class="panel-heading"> <div class="row">
+                        <div class="col-md-4">
+                            <b>{{proyecto.nombre_proyecto}}</b>
+                        </div>
+                    </div></div>
+                    <div class="panel-body">
+                        <div class="col-md-6">  <h4>Dirigido por {{ proyecto.manager }} </h4> </div>
+                        <div class="col-md-3 text-right">  Completado </div>
+                        <div class="col-md-3">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{perc_compl}}" aria-valuemin="0" aria-valuemax="100" style="width: {{perc_compl}}%; min-width: 12%">
+                                <span>{{perc_compl}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">  <h4><small>{{ proyecto.nivelMadurez }}</small></h4> </div>
 
-                        <!-- Eliminar -->
-                        <form action="{% url 'cmmi:proyecto-eliminar' proyecto.id %}" method="post" style="display: inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}"/>
-                            <button type="submit" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                        </form>
+                        <div class="col-md-12">
+                            <!-- Detalles -->
+                            <a href="{% url 'cmmi:detalles' proyecto.id %}" class="btn btn-primary btn-sm"> Ver detalles</a>
 
-                        <!-- Proyecto Urgente -->
-                        <a href="{% url 'cmmi:proyecto_urgente' proyecto.id %}" class="btn btn-default btn-sm btn-urgente" role="button">
-                            <span class="glyphicon glyphicon-exclamation-sign {% if proyecto.es_urgente %}active{% endif %}"></span>
-                        </a>
+
+                            <!-- Editar -->
+                          <a href="{% url 'cmmi:proyecto_modificar' proyecto.id %}" class="btn btn-primary btn-sm"> Modificar</a>
+
+
+                            <!-- Eliminar -->
+                            <form action="{% url 'cmmi:proyecto-eliminar' proyecto.id %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}"/>
+                                <button type="submit" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </form>
+
+
+                            <!-- Proyecto Urgente -->
+                            <a href="{% url 'cmmi:proyecto_urgente' proyecto.id %}" class="btn btn-default btn-sm btn-urgente" role="button">
+                                <span class="glyphicon glyphicon-exclamation-sign {% if proyecto.es_urgente %}active{% endif %}"></span>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             </div>

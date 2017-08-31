@@ -7,6 +7,9 @@ urlpatterns = [
 
     #Principal
     url(r'^$', views.index, name='index'),
+
+    # Search
+    url(r'^search/$', views.search, name='search'),
     #Registro
     url(r'^registro/$', views.registro, name='registro'),
 
@@ -17,8 +20,8 @@ urlpatterns = [
     #Detalles, Crear, Modificar y Eliminar un proyecto
     url(r'^(?P<pk>[0-9]+)/$',views.VistaDetalles.as_view(), name='detalles'),
     url(r'proyecto_crear/$',views.proyecto_crear, name='proyecto_crear'),
-#    url(r'proyecto/(?P<pk>[0-9]+)/$',views.ModificaProyecto.as_view(), name='proyecto-modificar'),
     url(r'proyecto/(?P<pk>[0-9]+)/eliminar/$',views.EliminaProyecto.as_view(), name='proyecto-eliminar'),
+    url(r'proyecto/(?P<proyecto_id>[0-9]+)/modificar/$',views.proyecto_modificar, name='proyecto_modificar'),
 
     #Ver todas, Crear y Eliminar tareas
     url(r'^(?P<proyecto_id>[0-9]+)/tarea_crear/$', views.tarea_crear, name='tarea_crear'),
@@ -27,6 +30,8 @@ urlpatterns = [
 
     #Tarea y proyecto urgentes
     url(r'^(?P<tarea_id>[0-9]+)/urgente/$', views.urgente, name='urgente'),
+    url(r'^(?P<tarea_id>[0-9]+)/completada/$', views.completada, name='completada'),
+    url(r'^(?P<tarea_id>[0-9]+)/completadasAll/$', views.completadasAll, name='completadasAll'),
     url(r'^(?P<proyecto_id>[0-9]+)/proyecto_urgente/$', views.proyecto_urgente, name='proyecto_urgente'),
 
     #url(r'^(?P<proyecto_id>[0-9]+)/proyecto_urgente/$', views.proyecto_urgente, name='proyecto_urgente'),

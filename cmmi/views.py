@@ -8,7 +8,7 @@ from django.views.generic import View
 from .forms import UserForm, TareaForm, ProyectoForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 
 
 
@@ -18,23 +18,52 @@ def index(request):
         return render(request, 'cmmi/iniciar_sesion.html')
     else:
         proyectos = Proyecto.objects.filter(usuario=request.user)
-        resultado_tareas = Tarea.objects.all()
-        query = request.GET.get("q")
-        if query:
-            proyectos = proyectos.filter(
-                Q(nombre_proyecto__icontains=query) |
-                Q(manager__icontains=query)
-            ).distinct()
-            resultado_tareas = resultado_tareas.filter(
-                Q(nombre_tarea__icontains=query)
-            ).distinct()
-            return render(request, 'cmmi/index.html', {
-                'proyectos': proyectos,
-                'tareas': resultado_tareas,
-            })
-        else:
-            return render(request, 'cmmi/index.html', {'proyectos': proyectos})
+        num_tareas_completas = [Tarea.objects.filter(proyecto=p, completada=True).count() for p in proyectos]
+        num_tareas_total = [Tarea.objects.filter(proyecto=p).count() for p in proyectos]
+        perc_compl = list()
+        for comp, total in zip(num_tareas_completas, num_tareas_total):
 
+            if total != 0:
+                vall = float(comp/total)
+                vall2 = float(vall)*float(100.0)
+                perc_compl.append(round(float(vall2),1))
+            else:
+                perc_compl.append(0.0)
+        proyectos_and_perc = zip(proyectos,perc_compl)
+
+        return render(request, 'cmmi/index.html', {'proyectos': proyectos, 'proyectos_and_perc':proyectos_and_perc})
+
+
+#Search
+def search(request):
+    resultado_tareas = Tarea.objects.all()
+    query = request.GET.get("q")
+    if query:
+        proyectos = Proyecto.objects.filter(
+            Q(nombre_proyecto__icontains=query) |
+            Q(manager__icontains=query)
+        ).distinct()
+        resultado_tareas = resultado_tareas.filter(
+            Q(nombre_tarea__icontains=query)
+        ).distinct()
+        # print(proyectos)
+        num_tareas_completas = [Tarea.objects.filter(proyecto=p, completada=True).count() for p in proyectos]
+        num_tareas_total = [Tarea.objects.filter(proyecto=p).count() for p in proyectos]
+        perc_compl = list()
+        for comp, total in zip(num_tareas_completas, num_tareas_total):
+            if total != 0:
+                vall = float(comp/total)
+                vall2 = float(vall)*float(100.0)
+                perc_compl.append(round(float(vall2),1))
+            else:
+                perc_compl.append(0.0)
+        print(proyectos)
+        proyectos_and_perc = zip(proyectos,perc_compl)
+        return render(request, 'cmmi/index.html', {
+            'proyectos_and_perc': proyectos_and_perc,
+            'tareas': resultado_tareas,
+            'proyectos':proyectos
+        })
 # Detalles
 class VistaDetalles(generic.DetailView):
     login_url = '/iniciar_sesion/'
@@ -57,6 +86,21 @@ def proyecto_crear(request):
             "form": form,
         }
         return render(request, 'cmmi/proyecto_crear.html', context)
+
+# Modificar proyecto
+def proyecto_modificar(request, proyecto_id):
+    proyecto = get_object_or_404(Proyecto, pk=proyecto_id)
+    form = ProyectoForm(request.POST or None, instance = proyecto)
+    if form.is_valid():
+        proyecto = form.save(commit=False)
+        proyecto.save()
+        return HttpResponseRedirect(proyecto.get_absolute_url())
+    context = {
+        "proyecto":proyecto,
+        "form":form,
+    }
+    return render(request, 'cmmi/proyecto_form.html', context)
+
 
 # Eliminar proyecto
 class EliminaProyecto(DeleteView):
@@ -97,6 +141,7 @@ def tarea_crear(request, proyecto_id):
 				return render(request, 'cmmi/tarea_crear.html', context)
 		tarea = form.save(commit=False)
 		tarea.proyecto = proyecto
+		tarea.completada = False
 		tarea.save()
 		return render(request, 'cmmi/detalles.html', {'proyecto': proyecto})
 	context = {
@@ -147,6 +192,26 @@ def urgente(request, tarea_id):
         return JsonResponse({'success': False})
     else:
         return JsonResponse({'success': True})
+
+# Tarea completada
+def completada(request, tarea_id):
+    tarea = get_object_or_404(Tarea, pk=tarea_id)
+    if tarea.completada:
+        tarea.completada = False
+    else:
+        tarea.completada = True
+    tarea.save()
+    return HttpResponseRedirect('/cmmi/%s' %tarea.proyecto.id)
+
+
+def completadasAll(request, tarea_id):
+    tarea = get_object_or_404(Tarea, pk=tarea_id)
+    if tarea.completada:
+        tarea.completada = False
+    else:
+        tarea.completada = True
+    tarea.save()
+    return HttpResponseRedirect('/cmmi/tareas/all')
 
 #Registrar un usuario nuevo
 def registro(request):

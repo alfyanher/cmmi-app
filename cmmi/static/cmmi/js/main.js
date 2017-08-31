@@ -25,6 +25,7 @@ var ProyectosListPage = {
 			return false;
 		});
 	}
+
 };
 
 var TareasListPage = {
